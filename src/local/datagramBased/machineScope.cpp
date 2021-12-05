@@ -12,9 +12,14 @@ namespace dci::module::ppn::discovery::local::datagramBased
 {
     namespace
     {
+#ifdef _WIN32
+        const net::Endpoint g_masterPoint{net::Ip4Endpoint{{127, 231, 17, 85}, 49073}};
+        const net::Endpoint g_slavePoint{net::Ip4Endpoint{{127, 231, 17, 85}, 0}};
+#else
         constexpr char g_masterPointValue[] {"\0dci-ppn-discovery-local-machineScope"};
         const net::Endpoint g_masterPoint {net::LocalEndpoint{String{g_masterPointValue, sizeof(g_masterPointValue)-1}}};
         const net::Endpoint g_slavePoint {net::LocalEndpoint{}};
+#endif
     }
 
     /////////0/////////1/////////2/////////3/////////4/////////5/////////6/////////7

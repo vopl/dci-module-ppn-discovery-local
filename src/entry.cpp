@@ -8,8 +8,8 @@
 #include "pch.hpp"
 #include "local/preset.hpp"
 #include "local/processScope.hpp"
-#include "local/netBased/machineScope.hpp"
-#include "local/netBased/lanScope.hpp"
+#include "local/datagramBased/machineScope.hpp"
+#include "local/datagramBased/lanScope.hpp"
 #include "stiac-support.hpp"
 
 namespace dci::module::ppn::discovery::local
