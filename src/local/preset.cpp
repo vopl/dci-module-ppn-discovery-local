@@ -23,13 +23,13 @@ namespace dci::module::ppn::discovery::local
 
                 if(!utils::net::url::valid(addr))
                 {
-                    return cmt::readyFuture<>(exception::buildInstance<api::Error>("bad address value in config for preset: "+addr));
+                    return cmt::readyFuture<None>(exception::buildInstance<api::Error>("bad address value in config for preset: "+addr));
                 }
 
                 declareImpl(Entry{{}, {std::move(addr)}});
             }
 
-            return cmt::readyFuture<>();
+            return cmt::readyFuture(None{});
         };
     }
 
