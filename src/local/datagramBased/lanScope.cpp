@@ -61,19 +61,26 @@ namespace dci::module::ppn::discovery::local::datagramBased
     /////////0/////////1/////////2/////////3/////////4/////////5/////////6/////////7
     bool LanScope::addressAllowed(const transport::Address& a)
     {
-        using namespace std::literals;
-
-        std::string_view scheme = utils::net::url::scheme(a.value);
-        if("inproc"sv == scheme)
-        {
+        utils::URI<> uri;
+        if(!utils::uri::parse(a.value, uri))
             return false;
-        }
-        if("local"sv == scheme)
-        {
-            return false;
-        }
 
-        std::string_view authority = utils::net::url::authority(a.value);
-        return utils::net::ip::isCover(utils::net::ip::Scope::lan, utils::net::ip::scope(authority));
+        return std::visit([]<class Alt>(const Alt& alt)
+                          {
+                              if constexpr(std::is_same_v<utils::uri::TCP<>, Alt> || std::is_base_of_v<utils::uri::TCP<>, Alt>)
+                              {
+                                  return std::visit([]<class Host>(const Host& host)
+                                  {
+                                      if constexpr(std::is_same_v<utils::uri::networkNode::RegName<>, Host>)
+                                          return true;
+                                      if constexpr(std::is_same_v<utils::uri::networkNode::Ip4<>, Host>)
+                                          return utils::ip::isCover(utils::ip::Scope::lan4, utils::ip::scope(host));
+                                      if constexpr(std::is_same_v<utils::uri::networkNode::Ip6<>, Host>)
+                                          return utils::ip::isCover(utils::ip::Scope::lan6, utils::ip::scope(host));
+                                      return false;
+                                  }, alt._auth._host);
+                              }
+                              return false;
+                          }, uri);
     }
 }

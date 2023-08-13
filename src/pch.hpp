@@ -12,8 +12,8 @@
 #include <dci/utils/atScopeExit.hpp>
 #include <dci/poll/waitableTimer.hpp>
 #include <dci/stiac.hpp>
-#include <dci/utils/net/url.hpp>
-#include <dci/utils/net/ip.hpp>
+#include <dci/utils/uri.hpp>
+#include <dci/utils/ip.hpp>
 #include "ppn/discovery/local.hpp"
 
 namespace dci::module::ppn::discovery

@@ -69,12 +69,17 @@ namespace dci::module::ppn::discovery::local::datagramBased
     /////////0/////////1/////////2/////////3/////////4/////////5/////////6/////////7
     bool MachineScope::addressAllowed(const transport::Address& a)
     {
-        using namespace std::literals;
-        if("inproc"sv == utils::net::url::scheme(a.value))
-        {
+        utils::URI<> uri;
+        if(!utils::uri::parse(a.value, uri))
             return false;
-        }
 
-        return true;
+        return std::visit([]<class Alt>(const Alt& /*alt*/)
+                          {
+                              if constexpr(std::is_same_v<utils::uri::Local<>, Alt>)
+                                  return true;
+                              if constexpr(std::is_same_v<utils::uri::TCP<>, Alt> || std::is_base_of_v<utils::uri::TCP<>, Alt>)
+                                  return true;
+                              return false;
+                          }, uri);
     }
 }

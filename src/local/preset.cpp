@@ -7,7 +7,6 @@
 
 #include "pch.hpp"
 #include "preset.hpp"
-#include <dci/utils/net/url.hpp>
 
 namespace dci::module::ppn::discovery::local
 {
@@ -21,7 +20,7 @@ namespace dci::module::ppn::discovery::local
             {
                 std::string addr = std::get<0>(p);
 
-                if(!utils::net::url::valid(addr))
+                if(!utils::uri::valid(addr))
                 {
                     return cmt::readyFuture<None>(exception::buildInstance<api::Error>("bad address value in config for preset: "+addr));
                 }
